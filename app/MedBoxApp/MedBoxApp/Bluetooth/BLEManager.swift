@@ -79,7 +79,7 @@ final class BLEManager: NSObject, MedicationDeviceTransport {
     }
 }
 
-extension BLEManager: CBCentralManagerDelegate {
+extension BLEManager: @preconcurrency CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
         case .poweredOn:
@@ -136,7 +136,7 @@ extension BLEManager: CBCentralManagerDelegate {
     }
 }
 
-extension BLEManager: CBPeripheralDelegate {
+extension BLEManager: @preconcurrency CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         if let error {
             onProtocolError?("Service discovery failed: \(error.localizedDescription)")
@@ -200,4 +200,3 @@ extension BLEManager: CBPeripheralDelegate {
         publishNotification(value)
     }
 }
-
