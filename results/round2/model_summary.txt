@@ -1,0 +1,77 @@
+MEDBOX HIERARCHICAL MODEL - ROUND 2 RESULT
+==========================================
+
+Data
+----
+Round 1: 50 events
+Round 2: 50 events
+Combined: 100 events
+
+Current pill weight
+-------------------
+0.848 g
+
+Stage 1
+-------
+|ratio| < 0.30
+    -> DYNAMIC_RF
+       classify NONE / RETURN / DISTURBANCE
+
+0.50 <= ratio < 1.50
+    -> ONE
+
+1.50 <= ratio < 2.50
+    -> TWO
+
+Anything else
+    -> UNCERTAIN
+
+Round-2 holdout result
+----------------------
+Flat 5-class RF:
+    accuracy = 0.740
+
+Hierarchical model:
+    accuracy = 0.820
+
+Hierarchical errors:
+ event_id       label prediction      stage  final_delta_g
+       41 DISTURBANCE     RETURN DYNAMIC_RF          0.005
+       42 DISTURBANCE       NONE DYNAMIC_RF          0.046
+       43 DISTURBANCE     RETURN DYNAMIC_RF         -0.079
+       44 DISTURBANCE     RETURN DYNAMIC_RF         -0.068
+       45 DISTURBANCE     RETURN DYNAMIC_RF          0.047
+       46 DISTURBANCE     RETURN DYNAMIC_RF          0.009
+       47 DISTURBANCE       NONE DYNAMIC_RF          0.136
+       48 DISTURBANCE     RETURN DYNAMIC_RF          0.009
+       49 DISTURBANCE     RETURN DYNAMIC_RF         -0.051
+
+Why the hierarchical holdout is better
+--------------------------------------
+The deterministic weight stage protects ONE/TWO from being confused
+with large hand-pressure disturbances. Round 2 intentionally contains
+strong ONE interactions and lighter DISTURBANCE interactions.
+
+Remaining weakness
+------------------
+Most remaining round-2 errors are light DISTURBANCE events being
+classified as NONE or RETURN by the dynamic RF trained only on round 1.
+This is expected because round 1 contained much stronger disturbance
+patterns.
+
+Combined 100-event internal CV
+------------------------------
+Hierarchical 5-fold CV accuracy = 1.000
+
+This is NOT an independent blind-test score because both rounds
+participate in cross-validation.
+
+Final frozen model
+------------------
+The dynamic RF has now been retrained on both rounds:
+    60 events
+    classes = NONE / RETURN / DISTURBANCE
+
+Use the saved model + fixed Stage-1 thresholds for the NEXT blind
+validation round. Do not change the model after seeing the blind-test
+labels if you want a defensible validation result.

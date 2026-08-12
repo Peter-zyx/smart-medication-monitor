@@ -1,0 +1,25 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Runtime serial output
+runtime/
+realtime result/
+medbox_data/
+*.serial.log
+
+# Apple/Xcode user and build state
+DerivedData/
+build/
+*.xcuserstate
+xcuserdata/
+.swiftpm/
+
+# Test/tool caches
+.pytest_cache/
+.coverage
+htmlcov/
+

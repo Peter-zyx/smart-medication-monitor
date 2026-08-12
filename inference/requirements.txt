@@ -1,0 +1,7 @@
+pandas
+numpy
+# The frozen joblib artifact was created with scikit-learn 1.8.0.
+scikit-learn==1.8.0
+matplotlib
+joblib
+pyserial

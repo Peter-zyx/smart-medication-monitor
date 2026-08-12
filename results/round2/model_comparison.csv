@@ -1,0 +1,4 @@
+evaluation,accuracy,independent_holdout
+Flat RF: round1 train -> round2 test,0.74,True
+Hierarchical: round1 train -> round2 test,0.82,True
+Hierarchical: combined 100-event 5-fold CV,1.0,False

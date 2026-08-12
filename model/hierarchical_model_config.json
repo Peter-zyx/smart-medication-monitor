@@ -1,0 +1,42 @@
+{
+  "pill_weight_g": 0.848,
+  "stage1": {
+    "zero_abs_ratio_max": 0.3,
+    "one_ratio_min": 0.5,
+    "one_ratio_max": 1.5,
+    "two_ratio_min": 1.5,
+    "two_ratio_max": 2.5
+  },
+  "dynamic_classes": [
+    "NONE",
+    "RETURN",
+    "DISTURBANCE"
+  ],
+  "dynamic_features": [
+    "weight_range_g",
+    "std_weight_g",
+    "max_rise_from_baseline_g",
+    "max_drop_from_baseline_g",
+    "max_abs_deviation_g",
+    "time_to_max_ms",
+    "time_to_min_ms",
+    "duration_ms",
+    "max_step_up_g",
+    "max_step_down_g",
+    "mean_abs_step_g",
+    "std_step_g",
+    "n_change_ge_0_5g",
+    "n_change_ge_2g",
+    "n_change_ge_5g",
+    "fraction_below_baseline_minus_0_4g",
+    "longest_below_points",
+    "below_episode_count",
+    "start_mean_delta_g",
+    "start_std_g",
+    "end_std_g",
+    "abs_area_g_ms",
+    "signed_area_g_ms",
+    "n_samples"
+  ],
+  "notes": "ONE/TWO are classified from final weight change. Only near-zero net change is sent to the dynamic RF. Out-of-window values return UNCERTAIN."
+}
