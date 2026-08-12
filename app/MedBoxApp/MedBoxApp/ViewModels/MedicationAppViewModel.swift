@@ -46,11 +46,11 @@ final class MedicationAppViewModel: ObservableObject {
 
     init(
         transport: MedicationDeviceTransport,
-        history: EventHistoryStore = EventHistoryStore(),
+        history: EventHistoryStore? = nil,
         isSimulation: Bool = false
     ) {
         self.transport = transport
-        self.history = history
+        self.history = history ?? EventHistoryStore()
         self.isSimulation = isSimulation
 
         transport.onConnectionStateChange = { [weak self] state in
