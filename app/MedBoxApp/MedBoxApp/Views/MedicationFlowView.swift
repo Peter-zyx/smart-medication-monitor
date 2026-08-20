@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct MedicationFlowView: View {
+    @EnvironmentObject private var settings: AppSettingsStore
     let state: MedicationAppViewModel.FlowState
     let onDismiss: () -> Void
 
@@ -16,18 +17,17 @@ struct MedicationFlowView: View {
             }
             .frame(width: 30, height: 30)
 
-            Text(state.message)
+            Text(state.message(language: settings.language))
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(AppTheme.navy)
 
             Spacer()
 
             if !state.isActive {
-                Button("Dismiss", action: onDismiss)
+                Button(settings.text("Dismiss", "关闭"), action: onDismiss)
                     .font(.caption.weight(.bold))
             }
         }
         .medBoxCard()
     }
 }
-

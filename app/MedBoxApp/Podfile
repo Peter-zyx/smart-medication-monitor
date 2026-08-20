@@ -1,0 +1,6 @@
+platform :ios, '17.0'
+
+target 'MedBoxApp' do
+  use_frameworks!
+  pod 'MediaPipeTasksVision', '1.0.0'
+end

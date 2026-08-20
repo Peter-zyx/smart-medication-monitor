@@ -43,6 +43,16 @@ public enum MedicationPrediction: String, Codable, CaseIterable, Sendable {
     case uncertain = "UNCERTAIN"
 }
 
+public enum VisionAction: String, Codable, CaseIterable, Sendable {
+    case take = "TAKE"
+    case drink = "DRINK"
+    case touchFace = "TOUCH_FACE"
+    case adjust = "ADJUST"
+    case pickOnly = "PICK_ONLY"
+    case none = "NONE"
+    case uncertain = "UNCERTAIN"
+}
+
 public enum DeviceOperation: String, Codable, Sendable {
     case zero = "ZERO"
     case learn = "LEARN"
@@ -81,12 +91,25 @@ public struct AIResult: Equatable, Sendable {
     }
 }
 
+public struct VisionResult: Equatable, Sendable {
+    public let eventID: Int
+    public let action: VisionAction
+    public let confidence: Double
+
+    public init(eventID: Int, action: VisionAction, confidence: Double) {
+        self.eventID = eventID
+        self.action = action
+        self.confidence = confidence
+    }
+}
+
 public enum BLEMessage: Equatable, Sendable {
     case opened(eventID: Int)
     case closed(eventID: Int)
     case eventEnded(eventID: Int, removedWeight: Double)
     case ready(eventID: Int)
     case ai(AIResult)
+    case vision(VisionResult)
     case weight(Double)
     case status(MedicationStatus)
     case mode(DeviceMode)
@@ -96,4 +119,3 @@ public enum BLEMessage: Equatable, Sendable {
     case error(code: String)
     case unknown(raw: String)
 }
-

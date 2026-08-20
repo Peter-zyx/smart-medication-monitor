@@ -66,6 +66,22 @@ public struct BLEMessageParser: Sendable {
                         : nil
                 )
             )
+        case "V":
+            try require(fields, type: type, count: 4)
+            guard let action = VisionAction(rawValue: fields[2].uppercased()) else {
+                throw BLEParseError.invalidValue(field: "vision_action", value: fields[2])
+            }
+            let confidence = try number(fields[3], field: "vision_confidence")
+            guard (0...1).contains(confidence) else {
+                throw BLEParseError.invalidValue(field: "vision_confidence", value: fields[3])
+            }
+            return .vision(
+                VisionResult(
+                    eventID: try integer(fields[1], field: "event_id"),
+                    action: action,
+                    confidence: confidence
+                )
+            )
         case "W":
             try require(fields, type: type, count: 2)
             return .weight(try number(fields[1], field: "weight"))
@@ -142,4 +158,3 @@ public struct BLEMessageParser: Sendable {
         return parsed
     }
 }
-

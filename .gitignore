@@ -2,8 +2,14 @@
 __pycache__/
 *.py[cod]
 .venv/
+.venv-camera-ai/
 venv/
 .env
+
+# Camera dataset, downloaded MediaPipe assets, and trained artifacts
+camera_data/
+inference/camera/models/*.task
+inference/camera/output/
 
 # Runtime serial output
 runtime/
@@ -17,9 +23,10 @@ build/
 *.xcuserstate
 xcuserdata/
 .swiftpm/
+.build/
+Pods/
 
 # Test/tool caches
 .pytest_cache/
 .coverage
 htmlcov/
-

@@ -16,8 +16,21 @@ final class EventHistoryStore: ObservableObject {
     }
 
     func add(_ record: MedicationEventRecord) {
-        guard !records.contains(where: { $0.eventID == record.eventID }) else { return }
+        // ESP32 event IDs restart after a reboot. Only suppress a duplicate result
+        // from the same recent event, not a legitimate event on a later day.
+        guard !records.contains(where: {
+            $0.eventID == record.eventID
+                && abs($0.timestamp.timeIntervalSince(record.timestamp)) < 5 * 60
+        }) else { return }
         records.insert(record, at: 0)
+        persist()
+    }
+
+    func attachVision(_ result: VisionResult) {
+        guard let index = records.firstIndex(where: { $0.eventID == result.eventID }) else {
+            return
+        }
+        records[index] = records[index].attachingVision(result)
         persist()
     }
 
@@ -36,4 +49,3 @@ final class EventHistoryStore: ObservableObject {
         defaults.set(data, forKey: storageKey)
     }
 }
-
