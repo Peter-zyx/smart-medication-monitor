@@ -23,7 +23,14 @@
     <key>LSRequiresIPhoneOS</key>
     <true/>
     <key>NSBluetoothAlwaysUsageDescription</key>
-    <string>MedBox uses Bluetooth to connect to the medication monitor and receive medication-event results.</string>
+    <string>MedBox uses Bluetooth to connect to the medication monitor and receive medication-event results. MedBox 使用蓝牙连接用药监测器并接收事件结果。</string>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>MedBox temporarily connects to the medication monitor's local camera stream during a medication event. MedBox 在用药事件期间临时连接药盒的本地相机画面。</string>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsLocalNetworking</key>
+        <true/>
+    </dict>
     <key>UILaunchScreen</key>
     <dict/>
     <key>UISupportedInterfaceOrientations</key>

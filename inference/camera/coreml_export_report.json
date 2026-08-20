@@ -1,0 +1,12 @@
+{
+  "output": "app/MedBoxApp/MedBoxApp/Resources/CameraActionClassifier.mlmodel",
+  "clip_count": 120,
+  "feature_count": 2576,
+  "classes": ["ADJUST", "DRINK", "NONE", "PICK_ONLY", "TAKE", "TOUCH_FACE"],
+  "estimators": 600,
+  "cv_accuracy": 0.9666666666666667,
+  "verified_samples": 24,
+  "label_mismatches": 0,
+  "max_probability_error": 9.547918011776346e-15,
+  "safety_semantics": "TAKE is an ingestion-like visible action; it does not confirm swallowing."
+}

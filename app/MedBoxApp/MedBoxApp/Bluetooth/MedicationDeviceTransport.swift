@@ -9,15 +9,15 @@ enum DeviceConnectionState: Equatable, Sendable {
     case ready
     case disconnected(reason: String?)
 
-    var label: String {
+    func label(language: AppLanguage) -> String {
         switch self {
-        case .bluetoothUnavailable: "Bluetooth unavailable"
-        case .idle: "Not connected"
-        case .scanning: "Searching for MedBox-S3"
-        case .connecting: "Connecting"
-        case .discovering: "Preparing device"
-        case .ready: "Connected"
-        case let .disconnected(reason): reason ?? "Disconnected"
+        case .bluetoothUnavailable: language.text("Bluetooth unavailable", "蓝牙不可用")
+        case .idle: language.text("Not connected", "未连接")
+        case .scanning: language.text("Searching for MedBox-S3", "正在搜索 MedBox-S3")
+        case .connecting: language.text("Connecting", "正在连接")
+        case .discovering: language.text("Preparing device", "正在准备设备")
+        case .ready: language.text("Connected", "已连接")
+        case let .disconnected(reason): reason ?? language.text("Disconnected", "连接已断开")
         }
     }
 
@@ -46,4 +46,3 @@ enum DeviceTransportError: LocalizedError {
         }
     }
 }
-

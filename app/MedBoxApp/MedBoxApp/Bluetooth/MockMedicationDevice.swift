@@ -44,6 +44,10 @@ final class MockMedicationDevice: MedicationDeviceTransport {
                 let delta = Self.delta(for: prediction)
                 onMessage?(.eventEnded(eventID: eventID, removedWeight: delta))
                 onMessage?(.ready(eventID: eventID))
+                let vision = prediction == .one
+                    ? VisionResult(eventID: eventID, action: .take, confidence: 0.82)
+                    : VisionResult(eventID: eventID, action: .none, confidence: 0.79)
+                onMessage?(.vision(vision))
                 try? await Task.sleep(for: .milliseconds(600))
                 onMessage?(
                     .ai(
@@ -90,4 +94,3 @@ final class MockMedicationDevice: MedicationDeviceTransport {
         }
     }
 }
-

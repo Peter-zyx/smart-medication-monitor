@@ -1,0 +1,26 @@
+{
+  "class_order": [
+    "DISTURBANCE",
+    "NONE",
+    "RETURN"
+  ],
+  "feature_count": 24,
+  "format_version": 1,
+  "max_tree_depth": 5,
+  "node_count": 3174,
+  "source_config": "model/hierarchical_model_config.json",
+  "source_config_sha256": "7e42b41e0e58358950f72915987cbb9f4f12ed095706f046de618521089a23e6",
+  "source_model": "model/hierarchical_dynamic_rf.joblib",
+  "source_model_sha256": "d26265113e7b56cc8c9d4923e20c6d138b0dc1e09ebf3fd73cf5d0b94c8648e1",
+  "tree_count": 500,
+  "verification": {
+    "datasets": [
+      "round1",
+      "round2",
+      "synthetic_round3"
+    ],
+    "dynamic_cases": 90,
+    "label_mismatches": 0,
+    "max_probability_error": 0.0
+  }
+}

@@ -9,18 +9,22 @@ An ESP32-S3, load-cell, machine-learning, and iPhone prototype that records evid
 ```text
 iPhone app or nRF Connect
         ↓ BLE: OPEN
-ESP32-S3 + HX711 + load cell
-        ↓ USB Serial: EVENT_START / DATA / EVENT_END
-Mac/PC Python hierarchical inference
-        ↓ USB Serial: AI_RESULT
-ESP32-S3
+ESP32-S3 + HX711 + load cell + OV2640
+        ↓ on-device hierarchical weight inference
         ↓ BLE notification: AI
 iPhone app
+
+OV2640 → ESP32 MJPEG → iPhone MediaPipe + Core ML action inference
+        → local visual signal + event history
 ```
 
-The load-cell firmware, BLE link, 100-event real experimental dataset, hierarchical classifier, and desktop real-time return path have been tested. The initial SwiftUI app is under `app/MedBoxApp`.
+The load-cell pipeline remains intact and the frozen hierarchical weight model now
+runs on the ESP32-S3. The iPhone runs the prototype camera action classifier
+on-device. Legacy desktop weight and camera bridges remain available for diagnostics,
+but the normal medication flow no longer requires a computer. Camera evaluation is
+limited to one participant/session. The SwiftUI app is under `app/MedBoxApp`.
 
-称重固件、BLE 链路、100 个真实实验事件、层级分类器以及桌面实时结果回传链路均已有测试记录。初始 SwiftUI 应用位于 `app/MedBoxApp`。
+称重固件、BLE 链路、100 个真实实验事件和层级分类器均已有测试记录；重量模型现在运行于 ESP32，动作模型运行于 iPhone。SwiftUI 应用位于 `app/MedBoxApp`。
 
 ## Motivation / 项目动机
 
@@ -31,9 +35,9 @@ Medication adherence cannot be inferred reliably from a reminder acknowledgement
 ## Hardware / 硬件
 
 - ESP32-S3R8 development board, 16 MB flash, 8 MB OPI PSRAM
-- HX711 with load cell: DT GPIO 5, SCK GPIO 6
+- HX711 with load cell: DT GPIO 9, SCK GPIO 10
 - Active-low onboard LED: GPIO 1
-- Button: GPIO 4 to GND with `INPUT_PULLUP`
+- Matching-header OV2640 camera; GPIO 4 is camera D0
 - Current mechanical calibration factor: `653.0`
 - Experimental mock-pill mass: approximately `0.848 g`
 
@@ -80,30 +84,40 @@ These small prototype experiments are not clinical validation or independent rea
 The SwiftUI MVP provides:
 
 - Home and medication-event flow
+- Multiple daily prescriptions with local 15-minute follow-up reminders
 - CoreBluetooth discovery, connection, characteristic subscription, and commands
 - Typed BLE message parsing
 - Result presentation using cautious product language
+- Typed camera-action messages and a separate visual-signal card
+- On-device MediaPipe landmark extraction and Core ML action classification
 - Local event history
+- A stable local patient ID and on-device clinician-view prototype
+- User-selectable English and Simplified Chinese UI
 - A separate mock transport for development without hardware
 
 ## Current limitations / 当前限制
 
-- Inference currently runs on a Mac/PC, not on the iPhone or ESP32.
+- ESP32 weight-model parity is verified offline; physical scale behavior still requires hardware acceptance testing.
 - `OPEN` represents a simulated timed lid interaction; no physical actuator or Hall sensor is implemented.
 - Weight evidence does not prove biological ingestion.
-- No camera recognition, multimodal fusion, cloud backend, authentication, or Android app exists yet.
+- Camera recognition currently reflects one participant/session and is not evidence of cross-user generalisation.
+- Doctor lookup is currently local to one device. A secure authenticated backend is
+  required before clinicians can retrieve consenting patients' records remotely.
+- No cloud backend, authentication, or Android app exists yet.
 
 ## Future work / 后续计划
 
-Planned research may add camera-based ingestion-like action evidence and multimodal fusion. It is not part of the current implementation. Deployment to ESP32, iPhone, or a backend remains an open engineering decision.
+Future research should add cross-user camera data and formally evaluate the multimodal
+decision gate. The current visual signal is prototype evidence, not ingestion proof.
 
-未来研究可能加入摄像头“类似吞服动作”证据与多模态融合，但当前尚未实现。模型最终部署到 ESP32、iPhone 或服务端仍是开放决策。
+未来研究需要增加跨用户摄像头数据并正式评估多模态决策门。目前视觉结果只是原型证据，不代表已经吞服。
 
 ## Repository structure / 仓库结构
 
 ```text
 firmware/esp32/       active and preserved legacy firmware
-inference/            desktop real-time inference and collection tools
+inference/            model export, verification, desktop fallback, and collection tools
+inference/camera/     camera training, live preview, and ESP32 UDP bridge
 model/                canonical frozen runtime model and configuration
 data/                 real Rounds 1–2 and synthetic Round 3 data
 results/              preserved evaluation artifacts
@@ -115,7 +129,8 @@ tests/                hardware-independent Python regression tests
 
 ## Getting started / 快速开始
 
-Desktop inference requires Python 3:
+The normal LIVE flow does not require desktop inference. Python 3 remains useful for
+model regeneration, offline verification, and the optional serial fallback:
 
 ```bash
 python3 -m venv .venv
@@ -126,11 +141,11 @@ python3 inference/realtime_inference_ble.py
 
 Do not run the Arduino Serial Monitor, data logger, and real-time inference process against the same serial port simultaneously.
 
-Firmware settings and upload instructions are in [system architecture](docs/SYSTEM_ARCHITECTURE.md). Open `app/MedBoxApp/MedBoxApp.xcodeproj` with Xcode to run the iPhone app.
+Firmware settings and upload instructions are in [system architecture](docs/SYSTEM_ARCHITECTURE.md). Run `pod install` in `app/MedBoxApp`, then open `app/MedBoxApp/MedBoxApp.xcworkspace` with Xcode to run the iPhone app with on-device camera recognition.
+Camera training and live forwarding instructions are in [the camera README](inference/camera/README.md).
 
 ## Safety and project status / 安全与项目状态
 
 This is an engineering/research prototype. User-facing results mean “medication removed,” “medication returned,” or “status uncertain”—never guaranteed ingestion or a medically verified dose.
 
 这是工程/研究原型。界面结果表示“药物被取出”“药物被放回”或“状态不确定”，不代表保证已吞服或医学验证剂量。
-

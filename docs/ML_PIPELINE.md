@@ -41,10 +41,26 @@ The exact ordered list is stored in `model/hierarchical_model_config.json`. Feat
 - Frozen dynamic classifier: `model/hierarchical_dynamic_rf.joblib`
 - Runtime configuration: `model/hierarchical_model_config.json`
 - Active real-time runner: `inference/realtime_inference_ble.py`
+- ESP32 exporter: `inference/weight/export_esp32_weight_model.py`
+- ESP32 runtime: `firmware/esp32/MedBox_LiveTrain_AI/weight_inference.h`
+- Generated forest: `firmware/esp32/MedBox_LiveTrain_AI/weight_model_generated.h`
 
 The model was trained on the 60 near-zero events from both real rounds: `NONE`, `RETURN`, and `DISTURBANCE`. ONE and TWO remain deterministic Stage-1 decisions.
 
 The persisted estimator records scikit-learn 1.8.0. `inference/requirements.txt` pins that version because joblib estimators are not guaranteed to be compatible across scikit-learn releases.
+
+## ESP32 deployment
+
+The frozen 500-tree dynamic forest contains 3,174 nodes and is exported without
+retraining. The ESP32 buffers at most 64 event samples, recreates the same ordered
+24 features, applies the unchanged Stage-1 uncertainty gaps, and averages the same
+per-leaf class probabilities. Export metadata and hashes are stored in
+`inference/weight/esp32_export_report.json`.
+
+The host C++ verifier exercises the exact header-only runtime used by Arduino.
+Round 1, Round 2, and synthetic Round 3 provide 150 regression events; all labels
+must match the frozen Python pipeline before deployment. This is implementation
+parity and pipeline verification, not new independent model validation.
 
 ## RETURN semantics
 

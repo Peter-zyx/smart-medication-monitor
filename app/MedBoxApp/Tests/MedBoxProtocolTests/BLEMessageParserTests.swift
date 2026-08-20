@@ -32,6 +32,17 @@ struct BLEMessageParserTests {
         )
     }
 
+    @Test func parsesVisionResult() throws {
+        #expect(
+            try parser.parse("V|15|TAKE|0.824") ==
+                .vision(VisionResult(eventID: 15, action: .take, confidence: 0.824))
+        )
+        #expect(
+            try parser.parse("V|0|TOUCH_FACE|0.612") ==
+                .vision(VisionResult(eventID: 0, action: .touchFace, confidence: 0.612))
+        )
+    }
+
     @Test func parsesStatusAndOperations() throws {
         #expect(
             try parser.parse("S|TestDrug|0.839|1|LIVE") ==
@@ -62,6 +73,8 @@ struct BLEMessageParserTests {
         #expect(throws: BLEParseError.self) { try parser.parse("AI|abc|ONE|0.8") }
         #expect(throws: BLEParseError.self) { try parser.parse("AI|1|INVALID|0.8") }
         #expect(throws: BLEParseError.self) { try parser.parse("S|Drug|not-a-number|1|LIVE") }
+        #expect(throws: BLEParseError.self) { try parser.parse("V|1|INVALID|0.8") }
+        #expect(throws: BLEParseError.self) { try parser.parse("V|1|TAKE|1.2") }
         #expect(throws: BLEParseError.self) { try parser.parse("") }
     }
 
@@ -72,4 +85,3 @@ struct BLEMessageParserTests {
         #expect(BLECommand.label(.returned).wireValue == "LABEL|RETURN")
     }
 }
-
